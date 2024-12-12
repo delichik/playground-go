@@ -2,34 +2,65 @@
 
 To implement `extend` function
 
+## example
+
+There is a function, now is `the_funtion1`, which needs to call the `A()`, and the function is allow any struct which include `P`.
 
 ```go
-package main
-
-type Model1 struct {
-  // some fields...
+type P struct {
+	msg1 string
 }
 
-// getters & setters implements of fields
-
-type Model1Iface interface {
-	// getters & setters declears of fields
+func (p *P) A() string {
+	return p.msg1
 }
 
-type Model2 struct {
-	Model1
+type T struct {
+	*P
+	msg2 string
 }
 
-func main(){
-  t1(&Model2{}) // no!
-  t2(&Model2{}) // its no problem!
+func (t *T) A() string {
+	return t.msg2
 }
 
-func t1(m Model1) { // use the struct
-	fmt.Println(m.GetName())
-}
-
-func t2(m Model1Iface) { // use the interface
-	fmt.Println(m.GetName())
+func the_function1(p *P) {
+	fmt.Println(p.A())
 }
 ```
+
+We can only use like this:
+
+```go
+func main() {
+	t := &T{
+		P: &P{
+			msg1: "1",
+		},
+		msg2: "2",
+	}
+	the_function1(t.P)
+}
+```
+It prints `1`.
+
+But we want to call `(t *T) A() string` instead of `(p *P) A() string`.
+
+Use the generator, and write another `the_function`:
+
+```go
+func the_function2(p PIface) {
+	fmt.Println(p.A())
+}
+
+func main() {
+	t := &T{
+		P: &P{
+			msg1: "1",
+		},
+		msg2: "2",
+	}
+	the_function2(t)
+}
+```
+It prints `2`!
