@@ -1,0 +1,6 @@
+**/.idea
+**/.vscode
+**/lsp
+**/go.sum
+**/*.log
+**/*.exe
